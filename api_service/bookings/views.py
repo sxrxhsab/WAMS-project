@@ -55,6 +55,7 @@ class ReservationViewSet(viewsets.ModelViewSet):
         reservation = serializer.save(user=self.request.user)
 
         # 🔥 ENVOI RABBITMQ
+        print("🔥 TEST RABBITMQ")
         send_reservation_message({
             "id": reservation.id,
             "equipment": reservation.equipment.name,

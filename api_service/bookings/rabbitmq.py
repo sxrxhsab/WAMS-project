@@ -5,7 +5,7 @@ import json
 def send_reservation_message(data):
     try:
         connection = pika.BlockingConnection(
-            pika.ConnectionParameters(host='localhost')
+            pika.ConnectionParameters(host='rabbitmq')
         )
         channel = connection.channel()
 

@@ -1,0 +1,66 @@
+version: '3.9'
+
+services:
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  consul:
+    image: consul:latest
+    container_name: consul
+    ports:
+      - "8500:8500"
+    command: "agent -dev -client=0.0.0.0"
+
+  traefik:
+    image: traefik:v2.10
+    container_name: traefik
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "8080:8080"
+
+  api_service:
+    build: ./api_service
+    container_name: api_service
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./api_service:/app
+    ports:
+      - "8001:8000"
+    depends_on:
+      - rabbitmq
+
+  auth_service:
+    build: ./auth_service
+    container_name: auth_service
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./auth_service:/app
+    ports:
+      - "8002:8000"
+
+  worker_service:
+    build: ./worker_service
+    container_name: worker_service
+    command: python worker.py
+    volumes:
+      - ./worker_service:/app
+    depends_on:
+      - rabbitmq
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    command: npm start
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "3000:3000"

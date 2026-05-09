@@ -13,7 +13,7 @@ function Reservation() {
   useEffect(() => {
     if (!token) return;
 
-    fetch("http://127.0.0.1:8000/api/equipment/", {
+    fetch("http://localhost:8001/api/equipment/", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
@@ -36,7 +36,7 @@ function Reservation() {
       return;
     }
 
-    fetch("http://127.0.0.1:8000/api/reservations/", {
+    fetch("http://localhost:8001/api/reservations/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

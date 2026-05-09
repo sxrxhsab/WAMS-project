@@ -21,8 +21,7 @@ while not connected:
 
 channel = connection.channel()
 
-# ✅ durable=True
-channel.queue_declare(queue='reservations', durable=True)
+channel.queue_declare(queue='reservations')
 
 print("📨 En attente des messages...")
 

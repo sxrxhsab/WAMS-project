@@ -1,10 +1,14 @@
-from rest_framework import generics, permissions, status
+from rest_framework import generics, permissions, status, serializers
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from .models import User
 from .serializers import UserSerializer
-from bookings.rabbitmq import send_reservation_message
+
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()
 
 
 # 🔐 REGISTER
@@ -16,13 +20,13 @@ class RegisterView(generics.CreateAPIView):
 
 # 🔐 LOGIN
 class LoginView(generics.GenericAPIView):
+    serializer_class = LoginSerializer
     permission_classes = [permissions.AllowAny]
 
     def post(self, request, *args, **kwargs):
         username = request.data.get('username')
         password = request.data.get('password')
 
-        # ⚠️ Vérification
         if not username or not password:
             return Response(
                 {'error': 'Username et password requis'},
@@ -37,7 +41,6 @@ class LoginView(generics.GenericAPIView):
                 status=status.HTTP_401_UNAUTHORIZED
             )
 
-        # 🔥 Génération des tokens
         refresh = RefreshToken.for_user(user)
 
         return Response({
@@ -53,12 +56,5 @@ class MeView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        # ⚠️ Sécurité : vérifier que user existe
-        if not request.user or not request.user.is_authenticated:
-            return Response(
-                {'error': 'Non authentifié'},
-                status=status.HTTP_401_UNAUTHORIZED
-            )
-
         serializer = UserSerializer(request.user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data)

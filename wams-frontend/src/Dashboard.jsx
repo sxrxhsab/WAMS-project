@@ -13,20 +13,10 @@ function Dashboard() {
   const [reservations, setReservations] = useState([]);
 
   const token = localStorage.getItem("token");
-  
-<input
-  placeholder="Rechercher équipement..."
-  style={{
-    padding: "10px",
-    borderRadius: "8px",
-    border: "none",
-    width: "100%",
-    marginBottom: "20px"
-  }}
-/>
+
   useEffect(() => {
     // 📦 équipements
-    fetch("http://127.0.0.1:8000/api/equipment/", {
+    fetch("http://localhost:8001/api/equipment/", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -35,7 +25,7 @@ function Dashboard() {
       });
 
     // 📅 réservations
-    fetch("http://127.0.0.1:8000/api/reservations/", {
+    fetch("http://localhost:8001/api/reservations/", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -61,78 +51,165 @@ function Dashboard() {
   ];
 
   return (
-    
-    <div>
-      <h2 style={styles.title}>Dashboard 📊</h2>
-<p>Architecture: Microservices + RabbitMQ</p>
+    <div style={styles.container}>
+
+      {/* TITRE */}
+      <h2
+        style={{
+          fontSize: "60px",
+          fontWeight: "900",
+          marginBottom: "15px",
+          background: "linear-gradient(45deg,#7b61ff,#6ae3ff)",
+          WebkitBackgroundClip: "text",
+          color: "transparent",
+        }}
+      >
+        Dashboard 📊
+      </h2>
+
+      <p style={styles.subtitle}>
+        Architecture: Microservices + RabbitMQ
+      </p>
+
       {/* 🔢 CARDS */}
       <div style={styles.grid}>
-        <div style={styles.card}>
-          <h3>Équipements 📦</h3>
-          <p style={styles.number}>{equipments}</p>
+
+        {/* CARD ÉQUIPEMENTS */}
+        <div
+  style={styles.card}
+  onMouseEnter={(e) => {
+    e.currentTarget.style.transform = "scale(1.03)";
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.transform = "scale(1)";
+  }}
+>
+
+          <h3
+            style={{
+              fontSize: "38px",
+              fontWeight: "900",
+              marginBottom: "10px",
+            }}
+          >
+            📦 Équipements
+          </h3>
+
+          <p style={styles.number}>
+            {equipments}
+          </p>
+
         </div>
 
-        <div style={styles.card}>
-          <h3>Réservations 📅</h3>
-          <p style={styles.number}>{reservations.length}</p>
+        {/* CARD RÉSERVATIONS */}
+        <div
+  style={styles.card}
+  onMouseEnter={(e) => {
+    e.currentTarget.style.transform = "scale(1.03)";
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.transform = "scale(1)";
+  }}
+>
+
+          <h3
+            style={{
+              fontSize: "38px",
+              fontWeight: "900",
+              marginBottom: "10px",
+            }}
+          >
+            📅 Réservations
+          </h3>
+
+          <p style={styles.number}>
+            {reservations.length}
+          </p>
+
         </div>
+
       </div>
 
       {/* 📊 GRAPH */}
       <div style={styles.chart}>
-        <h3>Statut des réservations</h3>
 
-        <ResponsiveContainer width="100%" height={250}>
+        <h3
+          style={{
+            marginBottom: "20px",
+            fontSize: "40px",
+            fontWeight: "900",
+          }}
+        >
+          📊 Statut des réservations
+        </h3>
+
+        <ResponsiveContainer width="100%" height={320}>
           <BarChart data={stats}>
-            <XAxis dataKey="name" stroke="#fff" />
-            <YAxis stroke="#fff" />
+            <XAxis dataKey="name" stroke="#ffffff" />
+            <YAxis stroke="#ffffff" />
             <Tooltip />
-            <Bar dataKey="value" />
+            <Bar
+              dataKey="value"
+              fill="#6ae3ff"
+              radius={[12, 12, 0, 0]}
+            />
           </BarChart>
         </ResponsiveContainer>
+
       </div>
     </div>
   );
 }
 
 const styles = {
-  title: {
-    marginBottom: "20px",
+  container: {
+    padding: "20px",
+  },
+
+  subtitle: {
+    color: "#cbd5e1",
+    marginBottom: "35px",
+    fontSize: "20px",
   },
 
   grid: {
     display: "grid",
-    gridTemplateColumns: "repeat(2,1fr)",
-    gap: "20px",
+    gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))",
+    gap: "25px",
   },
 
   card: {
     background: "rgba(255,255,255,0.08)",
-    padding: "20px",
-    borderRadius: "15px",
+    padding: "40px",
+    borderRadius: "25px",
     backdropFilter: "blur(20px)",
-    boxShadow: "0px 4px 20px rgba(0,0,0,0.3)",
+    boxShadow: "0px 8px 30px rgba(0,0,0,0.4)",
+    border: "1px solid rgba(255,255,255,0.1)",
+    transition: "0.3s",
+    cursor: "pointer",
+    transition: "0.3s",
+transform: "scale(1)",
+cursor: "pointer",
   },
 
   number: {
-    fontSize: "30px",
-    fontWeight: "bold",
+    fontSize: "85px",
+    fontWeight: "900",
+    marginTop: "20px",
+    background: "linear-gradient(45deg,#7b61ff,#6ae3ff)",
+    WebkitBackgroundClip: "text",
+    color: "transparent",
   },
 
   chart: {
-    marginTop: "30px",
+    marginTop: "35px",
     background: "rgba(255,255,255,0.08)",
-    padding: "20px",
-    borderRadius: "15px",
+    padding: "35px",
+    borderRadius: "25px",
     backdropFilter: "blur(20px)",
+    boxShadow: "0px 8px 30px rgba(0,0,0,0.4)",
+    border: "1px solid rgba(255,255,255,0.1)",
   },
-  title: {
-  fontSize: "24px",
-  fontWeight: "bold",
-  background: "linear-gradient(45deg,#7b61ff,#6ae3ff)",
-  WebkitBackgroundClip: "text",
-  color: "transparent",
-},
 };
 
 export default Dashboard;

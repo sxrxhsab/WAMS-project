@@ -11,34 +11,57 @@ function App() {
   const [searchTerm, setSearchTerm] = useState("");
 
   // 🔐 pas connecté
-  if (!token) return <Login />;
+  if (!token) {
+    return <Login />;
+  }
 
   // 🔓 connecté
   return (
-    <Layout
-      onLogout={() => {
-        localStorage.removeItem("token");
-        window.location.reload();
-      }}
-      searchTerm={searchTerm}
-      setSearchTerm={setSearchTerm}
-    >
-      <div id="dashboard">
-        <Dashboard searchTerm={searchTerm} />
-      </div>
+    <div className="min-h-screen bg-slate-900 text-white">
 
-      <div id="equipment">
-        <Equipment searchTerm={searchTerm} />
-      </div>
+      <Layout
+        onLogout={() => {
+          localStorage.removeItem("token");
+          window.location.reload();
+        }}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+      >
 
-      <div id="reservation">
-        <Reservation />
-      </div>
+        {/* DASHBOARD */}
+        <section
+          id="dashboard"
+          className="mb-12"
+        >
+          <Dashboard searchTerm={searchTerm} />
+        </section>
 
-      <div id="reservations">
-        <ReservationsList searchTerm={searchTerm} />
-      </div>
-    </Layout>
+        {/* ÉQUIPEMENTS */}
+        <section
+          id="equipment"
+          className="mb-12"
+        >
+          <Equipment searchTerm={searchTerm} />
+        </section>
+
+        {/* RÉSERVATION */}
+        <section
+          id="reservation"
+          className="mb-12"
+        >
+          <Reservation />
+        </section>
+
+        {/* LISTE RÉSERVATIONS */}
+        <section
+          id="reservations"
+          className="mb-12"
+        >
+          <ReservationsList searchTerm={searchTerm} />
+        </section>
+
+      </Layout>
+    </div>
   );
 }
 

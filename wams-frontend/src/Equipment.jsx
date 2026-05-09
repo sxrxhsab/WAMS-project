@@ -9,14 +9,14 @@ function Equipment({ searchTerm = "" }) {
   const { showToast } = useToast() || {};
   const token = localStorage.getItem("token");
 
-  // 🔎 FILTRE GLOBAL
+  // 🔎 FILTRE
   const filteredItems = items.filter((e) =>
     e.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // 📦 FETCH
   const fetchEquipment = () => {
-    fetch("http://127.0.0.1:8000/api/equipment/", {
+    fetch("http://localhost:8001/api/equipment/", {
       headers: {
         Authorization: token ? `Bearer ${token}` : "",
       },
@@ -45,7 +45,7 @@ function Equipment({ searchTerm = "" }) {
       return;
     }
 
-    fetch("http://127.0.0.1:8000/api/equipment/", {
+    fetch("http://localhost:8001/api/equipment/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -74,7 +74,7 @@ function Equipment({ searchTerm = "" }) {
 
   // ❌ DELETE
   const deleteEquipment = (id) => {
-    fetch(`http://127.0.0.1:8000/api/equipment/${id}/`, {
+    fetch(`http://localhost:8001/api/equipment/${id}/`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -93,10 +93,14 @@ function Equipment({ searchTerm = "" }) {
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.header}>Équipements 📦</h2>
+
+      <h2 style={styles.header}>
+        Équipements 📦
+      </h2>
 
       {/* FORM */}
       <div style={styles.form}>
+
         <input
           style={styles.input}
           placeholder="Nom"
@@ -114,18 +118,26 @@ function Equipment({ searchTerm = "" }) {
         <button
           style={styles.add}
           onClick={addEquipment}
-          onMouseEnter={(e) => (e.target.style.opacity = "0.8")}
-          onMouseLeave={(e) => (e.target.style.opacity = "1")}
+          onMouseEnter={(e) =>
+            (e.target.style.transform = "scale(1.05)")
+          }
+          onMouseLeave={(e) =>
+            (e.target.style.transform = "scale(1)")
+          }
         >
           Ajouter
         </button>
+
       </div>
 
       {/* LIST */}
       {filteredItems.length === 0 ? (
-        <p style={{ color: "#aaa" }}>Aucun résultat 🔍</p>
+        <p style={{ color: "#aaa", fontSize: "20px" }}>
+          Aucun résultat 🔍
+        </p>
       ) : (
         <div style={styles.grid}>
+
           {filteredItems.map((e) => (
             <div
               key={e.id}
@@ -137,8 +149,14 @@ function Equipment({ searchTerm = "" }) {
                 (ev.currentTarget.style.transform = "scale(1)")
               }
             >
-              <h3 style={styles.title}>{e.name}</h3>
-              <p style={styles.desc}>{e.description}</p>
+
+              <h3 style={styles.title}>
+                {e.name}
+              </h3>
+
+              <p style={styles.desc}>
+                {e.description}
+              </p>
 
               <button
                 style={styles.delete}
@@ -146,8 +164,10 @@ function Equipment({ searchTerm = "" }) {
               >
                 Supprimer
               </button>
+
             </div>
           ))}
+
         </div>
       )}
     </div>
@@ -155,66 +175,88 @@ function Equipment({ searchTerm = "" }) {
 }
 
 const styles = {
-  container: { marginTop: "20px" },
+  container: {
+    marginTop: "40px",
+  },
 
   header: {
-    fontSize: "22px",
-    marginBottom: "10px",
-  },
-
-  form: { marginBottom: "15px" },
-
-  input: {
-    padding: "8px",
-    margin: "5px",
-    borderRadius: "6px",
-    border: "1px solid #ccc",
-  },
-
-  add: {
-    padding: "10px",
+    fontSize: "55px",
+    fontWeight: "900",
+    marginBottom: "25px",
     background: "linear-gradient(45deg,#7b61ff,#6ae3ff)",
-    color: "white",
-    border: "none",
-    borderRadius: "10px",
-    cursor: "pointer",
-    transition: "0.2s",
+    WebkitBackgroundClip: "text",
+    color: "transparent",
   },
 
-  grid: {
+  form: {
+    marginBottom: "30px",
     display: "flex",
     flexWrap: "wrap",
     gap: "15px",
   },
 
-  card: {
+  input: {
+    padding: "15px",
+    borderRadius: "12px",
+    border: "none",
     background: "rgba(255,255,255,0.08)",
     color: "white",
-    borderRadius: "15px",
-    padding: "15px",
+    fontSize: "16px",
     width: "250px",
-    backdropFilter: "blur(20px)",
-    boxShadow: "0px 4px 20px rgba(0,0,0,0.3)",
+    outline: "none",
+  },
+
+  add: {
+    background: "linear-gradient(45deg,#7b61ff,#6ae3ff)",
+    border: "none",
+    padding: "14px 24px",
+    borderRadius: "14px",
+    color: "white",
+    fontWeight: "bold",
+    cursor: "pointer",
+    fontSize: "17px",
     transition: "0.3s",
   },
 
+  grid: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "25px",
+  },
+
+  card: {
+    background: "rgba(255,255,255,0.08)",
+    color: "white",
+    borderRadius: "25px",
+    padding: "25px",
+    width: "300px",
+    backdropFilter: "blur(20px)",
+    boxShadow: "0px 8px 30px rgba(0,0,0,0.4)",
+    transition: "0.3s",
+    border: "1px solid rgba(255,255,255,0.1)",
+  },
+
   title: {
-    fontWeight: "bold",
-    marginBottom: "5px",
+    fontWeight: "900",
+    fontSize: "28px",
+    marginBottom: "12px",
   },
 
   desc: {
     color: "#ddd",
+    fontSize: "17px",
   },
 
   delete: {
-    marginTop: "10px",
-    background: "#e84118",
-    color: "white",
+    marginTop: "20px",
+    background: "#ef4444",
     border: "none",
-    padding: "6px",
-    borderRadius: "6px",
+    padding: "12px 20px",
+    borderRadius: "12px",
+    color: "white",
     cursor: "pointer",
+    fontWeight: "bold",
+    fontSize: "15px",
   },
 };
 

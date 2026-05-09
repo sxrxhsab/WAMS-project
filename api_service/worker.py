@@ -27,7 +27,7 @@ def callback(ch, method, properties, body):
 
 def start_worker():
     connection = pika.BlockingConnection(
-        pika.ConnectionParameters(host='localhost')
+        pika.ConnectionParameters(host='rabbitmq')
     )
     channel = connection.channel()
 

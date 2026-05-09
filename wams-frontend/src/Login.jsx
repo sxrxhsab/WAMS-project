@@ -5,7 +5,7 @@ function Login() {
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
-    fetch("http://127.0.0.1:8000/api/auth/login/", {
+    fetch("http://localhost:8001/api/auth/login/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
